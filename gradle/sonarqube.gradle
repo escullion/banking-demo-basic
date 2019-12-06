@@ -1,0 +1,13 @@
+sonarqube {
+  properties {
+    property "sonar.jacoco.reportPaths", "build/jacoco/integTest.exec,build/jacoco/test.exec"
+    property 'sonar.projectName', "banking-demo-basic"
+    property 'sonar.coverage.exclusions', ['src/main/java/com/eamonscullion/bankingdemobasic/BankingDemoBasicApplication.java',
+                                           '**/config/**', '**/model/**']
+
+//    Exclude "Rename this method to match the regular expression: [A-Z][a-zA-Z0-9]++" for JPA repositories
+    property 'sonar.issue.ignore.multicriteria', 'j1'
+    property 'sonar.issue.ignore.multicriteria.j1.ruleKey', 'squid:S00100'
+    property 'sonar.issue.ignore.multicriteria.j1.resourceKey', '**/*Repository.java'
+  }
+}
