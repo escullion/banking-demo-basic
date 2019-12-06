@@ -47,7 +47,7 @@ public class AccountService {
 
   public void closeAccount(Long accountNumber) {
     Account account = accountRepository.findByAccountNumber(accountNumber)
-      .orElseThrow(() -> new CustomException("Account number doesn't exist", HttpStatus.NO_CONTENT));
+      .orElseThrow(() -> new CustomException("Account number doesn't exist", HttpStatus.NOT_FOUND));
 
     if (account.getBalance().signum() < 0) {
       log.error("Cannot close account with account number {}, balance is negative", accountNumber);
@@ -59,7 +59,7 @@ public class AccountService {
 
   public AccountDTO getAccountOverview(Long accountNumber) {
     Account account = accountRepository.findByAccountNumber(accountNumber)
-      .orElseThrow(() -> new CustomException("Account number doesn't exist", HttpStatus.NO_CONTENT));
+      .orElseThrow(() -> new CustomException("Account number doesn't exist", HttpStatus.NOT_FOUND));
     AccountDTO dto = modelMapper.map(account, AccountDTO.class);
     log.debug("Successfully retrieve account overview for account number {}", accountNumber);
     dto.setRecentTransactions(getRecentTransactions(accountNumber));

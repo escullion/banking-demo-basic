@@ -40,7 +40,7 @@ public class TransactionService {
         return processWithdrawal(transaction);
       default:
         log.error("Failed to match a transaction type");
-        throw new CustomException("Transaction failed to process", HttpStatus.BAD_REQUEST);
+        throw new CustomException("Failed to process transaction", HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -82,7 +82,7 @@ public class TransactionService {
 
   private Account getAccount(Long accountNumber) {
     return accountRepository.findByAccountNumber(accountNumber)
-      .orElseThrow(() -> new CustomException("Account Number doesn't exist", HttpStatus.BAD_REQUEST));
+      .orElseThrow(() -> new CustomException("Account Number doesn't exist", HttpStatus.NOT_FOUND));
   }
 
 }
