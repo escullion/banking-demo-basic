@@ -7,6 +7,7 @@ plugins {
 }
 
 apply plugin: 'groovy'
+apply from: "$rootDir/gradle/integTest.gradle"
 apply from: "$rootDir/gradle/sonarqube.gradle"
 
 group = 'com.eamonscullion'
@@ -32,8 +33,10 @@ repositories {
 ext {
 	jwtVersion = "0.7.0"
 	modelMapperVersion = "2.3.0"
+	restAssuredVersion = '3.3.0'
 	spockVersion = "1.3-groovy-2.5"
 	swaggerVersion = "2.9.2"
+	wireMockVersion = '2.22.0'
 }
 
 dependencies {
@@ -52,7 +55,7 @@ dependencies {
 	implementation "io.jsonwebtoken:jjwt:$jwtVersion"
 
 	// H2
-	runtimeOnly "com.h2database:h2"
+	runtime "com.h2database:h2"
 
 	// Lombok
 	implementation "org.projectlombok:lombok"
@@ -64,8 +67,8 @@ dependencies {
 
 	// ModelMapper
 	implementation "org.modelmapper:modelmapper:$modelMapperVersion"
-}
 
-test {
-	useJUnitPlatform()
+	// Integration tests
+	integTestImplementation("io.rest-assured:rest-assured:$restAssuredVersion")
+	integTestImplementation("com.github.tomakehurst:wiremock-jre8:$wireMockVersion")
 }

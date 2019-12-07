@@ -3,6 +3,7 @@ package com.eamonscullion.bankingdemobasic.transaction.service;
 import com.eamonscullion.bankingdemobasic.account.model.entity.Account;
 import com.eamonscullion.bankingdemobasic.account.repository.AccountRepository;
 import com.eamonscullion.bankingdemobasic.app.exception.CustomException;
+import com.eamonscullion.bankingdemobasic.transaction.model.dto.CreatedTransactionDTO;
 import com.eamonscullion.bankingdemobasic.transaction.model.entity.Transaction;
 import com.eamonscullion.bankingdemobasic.transaction.model.dto.TransactionDTO;
 import com.eamonscullion.bankingdemobasic.transaction.repository.TransactionRepository;
@@ -24,7 +25,7 @@ public class TransactionService {
   private final AccountRepository accountRepository;
   private final ModelMapper modelMapper;
 
-  public Long processTransaction(TransactionDTO dto) {
+  public CreatedTransactionDTO processTransaction(TransactionDTO dto) {
     Account account = getAccount(dto.getAccountNumber());
     Transaction transaction = modelMapper.map(dto, Transaction.class);
     transaction.setAccount(account);
@@ -44,14 +45,14 @@ public class TransactionService {
     }
   }
 
-  private Long processDeposit(Transaction transaction) {
+  private CreatedTransactionDTO processDeposit(Transaction transaction) {
     Account account = transaction.getAccount();
     Transaction newTransaction = transactionRepository.save(transaction);
     log.debug("Transaction successfully processed with id {} for account {}", newTransaction.getId(), account.getAccountNumber());
 
     BigDecimal newBalance = account.getBalance().add(newTransaction.getAmount());
     updateBalance(account, newBalance);
-    return newTransaction.getId();
+    return modelMapper.map(newTransaction, CreatedTransactionDTO.class);
   }
 
   private void updateBalance(Account account, BigDecimal newBalance) {
@@ -60,11 +61,11 @@ public class TransactionService {
     log.debug("Balance successfully updated for account {}", account.getAccountNumber());
   }
 
-  private Long processWithdrawal(Transaction transaction) {
+  private CreatedTransactionDTO processWithdrawal(Transaction transaction) {
     Account account = transaction.getAccount();
-    if (account.getBalance().signum() < 0) {
-      log.error("Failed to withdraw from account, current balance is negative");
-      throw new CustomException("Cannot withdraw from account, balance is negative", HttpStatus.CONFLICT);
+    if (account.getBalance().signum() < 1) {
+      log.error("Failed to withdraw from account, current balance is negative or zero");
+      throw new CustomException("Cannot withdraw from account, balance is negative or zero", HttpStatus.CONFLICT);
     }
 
     if (account.getBalance().compareTo(transaction.getAmount()) < 0) {
@@ -77,7 +78,7 @@ public class TransactionService {
 
     BigDecimal newBalance = account.getBalance().subtract(newTransaction.getAmount());
     updateBalance(account, newBalance);
-    return newTransaction.getId();
+    return modelMapper.map(newTransaction, CreatedTransactionDTO.class);
   }
 
   private Account getAccount(Long accountNumber) {

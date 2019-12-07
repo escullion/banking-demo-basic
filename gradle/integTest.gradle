@@ -1,0 +1,33 @@
+sourceSets {
+  integTest {
+    java.srcDir 'src/integTest/groovy'
+    resources.srcDir 'src/integTest/resources'
+  }
+}
+
+dependencies {
+  integTestImplementation sourceSets.main.output
+  integTestImplementation sourceSets.test.output
+
+  integTestImplementation configurations.implementation
+  integTestImplementation configurations.testImplementation
+
+  integTestRuntime configurations.runtime
+  integTestRuntime configurations.testRuntime
+}
+
+task integTest(type: Test) {
+  group = LifecycleBasePlugin.VERIFICATION_GROUP
+  description = 'Runs the integration tests.'
+
+  maxHeapSize = '1024m'
+
+  testClassesDirs = sourceSets.integTest.output.classesDirs
+  classpath = sourceSets.integTest.runtimeClasspath
+
+  binResultsDir = file("$buildDir/integration-test-results/binary/integTest")
+
+  mustRunAfter tasks.test
+}
+
+check.dependsOn integTest

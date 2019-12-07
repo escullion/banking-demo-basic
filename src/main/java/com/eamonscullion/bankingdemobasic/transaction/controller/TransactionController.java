@@ -2,6 +2,7 @@ package com.eamonscullion.bankingdemobasic.transaction.controller;
 
 import com.eamonscullion.bankingdemobasic.app.validation.ExternalCall;
 import com.eamonscullion.bankingdemobasic.security.service.AuthenticationService;
+import com.eamonscullion.bankingdemobasic.transaction.model.dto.CreatedTransactionDTO;
 import com.eamonscullion.bankingdemobasic.transaction.model.dto.TransactionDTO;
 import com.eamonscullion.bankingdemobasic.transaction.service.TransactionService;
 import io.swagger.annotations.Api;
@@ -29,7 +30,7 @@ public class TransactionController {
 
   @PostMapping
   @ApiOperation(value = "Process a transaction for the authenticated account, and returns the transaction ID")
-  public ResponseEntity<Long>processTransaction(@RequestBody @Valid TransactionDTO dto) {
+  public ResponseEntity<CreatedTransactionDTO>processTransaction(@RequestBody @Valid TransactionDTO dto) {
     log.info("Request received to process a transaction");
     dto.setAccountNumber(authenticationService.getCurrentUserFromSession());
     return ResponseEntity.ok(transactionService.processTransaction(dto));
@@ -38,7 +39,7 @@ public class TransactionController {
   @PostMapping("external")
   @Validated(ExternalCall.class)
   @ApiOperation(value = "Process a transaction for an external source, and returns the transaction ID")
-  public ResponseEntity<Long> processExternalTransaction(@RequestBody @Valid TransactionDTO dto) {
+  public ResponseEntity<CreatedTransactionDTO> processExternalTransaction(@RequestBody @Valid TransactionDTO dto) {
     log.info("Request received to process an external transaction");
     return ResponseEntity.ok(transactionService.processTransaction(dto));
   }

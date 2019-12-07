@@ -7,6 +7,6 @@ import lombok.Data;
  */
 @Data
 public class CreatedAccountDTO {
-  private String accountNumber;
+  private Long accountNumber;
   private String pin;
 }
