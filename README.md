@@ -1,14 +1,16 @@
 # Banking Demo Basic
 
-Covers the basic functionality for handling accounts and processing transactions.
+Covers the basic functionality for handling accounts and processing transactions, secured used JWT.
 
-## Pre-requisites
+## Pre-requisites / Technologies used
 
 - Java 8
 - Spring boot 2.2
-- Lombok - Install lombok IDE plugin, and enable annotation processing in your IDE
-- Groovy Spock for unit testing
-- RestAssured for integration test requests
+- H2 in-memory database
+- Lombok, to enable you need to install lombok IDE plugin, and enable annotation processing in your IDE settings
+- Groovy Spock for BDD-based unit testing
+- RestAssured for BDD-based integration testing REST services
+- SonarQube for static analysis
 
 ## Building and running the app
 Building the app:
@@ -32,9 +34,16 @@ Running only integration tests:
 ```
 
 ## App Usage
-The app can be used through Swagger UI at `http://localhost:8080/swagger-ui.html`.
+The app can be used through Swagger UI at `http://localhost:8080/swagger-ui.html`. See Swagger for more detailed instructions.
 
-Swagger UI displays detailed instructions for how to the app.
+### Steps to use the app:
+1) Run the app using the above instructions.
+2) Create an account via POST request, which returns login credentials:
+`http://localhost:8080/swagger-ui.html#/Accounts/openAccountUsingPOST`
+3) Login in using credentials obtained from previous step, which will return a JWT token: 
+`http://localhost:8080/swagger-ui.html#/Authentication/loginUsingPOST`
+4) You can use the `Authorize` button, enter the token in the format `Bearer <token>`.
+5) You will now have access to the app!
 
 ## Running SonarQube locally
 1) Start Docker client (Docker for Mac, Docker for Windows or Docker machine)
