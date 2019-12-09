@@ -1,11 +1,12 @@
 # Banking Demo Basic
 
-Covers the basic functionality for handling accounts and processing transactions, secured used JWT.
+Covers the basic functionality for handling accounts and processing transactions, secured using JWT.
 
 ## Pre-requisites / Technologies used
 
 - Java 8
 - Spring boot 2.2
+- Gradle 5
 - H2 in-memory database
 - Lombok, to enable you need to install lombok IDE plugin, and enable annotation processing in your IDE settings
 - Groovy Spock for BDD-based unit testing
